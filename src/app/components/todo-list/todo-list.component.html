@@ -1,0 +1,40 @@
+<div class="flex justify-center">
+  <mat-form-field class="w-1/2">
+    <mat-label>Enter a TODO and press Enter</mat-label>
+    <input
+      matInput
+      #input
+      (keyup.enter)="addTodo(input.value); input.value = ''"
+    />
+    <mat-icon matSuffix>Edit</mat-icon>
+  </mat-form-field>
+</div>
+<div class="flex justify-center">
+  <mat-button-toggle-group #filter (change)="filterTodos($event)">
+    <mat-button-toggle value="all">All</mat-button-toggle>
+    <mat-button-toggle value="pending">Pending</mat-button-toggle>
+    <mat-button-toggle value="completed">Completed</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<mat-selection-list>
+  @if(store.todoState.isLoading()) {
+  <div class="flex justify-center">
+    <mat-spinner />
+  </div>
+  }@else { @for (todo of todos(); track todo.id) {
+  <mat-list-option
+    [selected]="todo.isCompleted"
+    (click)="updateTodo(todo, !todo.isCompleted)"
+  >
+    <div>
+      <mat-icon class="justify-between" (click)="deleteTodo(todo, $event)">
+        delete
+      </mat-icon>
+      <span [className]="todo.isCompleted ? 'line-through' : ''">{{
+        todo.title
+      }}</span>
+    </div>
+  </mat-list-option>
+  } }
+</mat-selection-list>
